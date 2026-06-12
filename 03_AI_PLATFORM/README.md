@@ -21,7 +21,7 @@ This folder contains the **Retail AI Intelligence Platform** — a 4-module AI l
                      User Input
                          │
                          ▼
-┌─────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────┐
 │           retail_ai_platform.ipynb               │
 │                                                  │
 │  ┌──────────────┐   ┌──────────────────────────┐ │
@@ -34,7 +34,7 @@ This folder contains the **Retail AI Intelligence Platform** — a 4-module AI l
 │  │  Anomaly     │   │   Insight Generator      │ │
 │  │  Detector    │   │   (LLM Reports)          │ │
 │  └──────────────┘   └──────────────────────────┘ │
-└──────────────────────┬──────────────────────────┘
+└──────────────────────┬───────────────────────────┘
                        │
                        ▼
               Snowflake Mart Tables
