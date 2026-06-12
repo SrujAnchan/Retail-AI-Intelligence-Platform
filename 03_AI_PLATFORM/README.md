@@ -18,21 +18,21 @@ This folder contains the **Retail AI Intelligence Platform** — a 4-module AI l
 ## Architecture
 
 ```
-User Input
-     │
-     ▼
+                     User Input
+                         │
+                         ▼
 ┌─────────────────────────────────────────────────┐
 │           retail_ai_platform.ipynb               │
 │                                                  │
 │  ┌──────────────┐   ┌──────────────────────────┐ │
-│  │  Module 1    │   │       Module 2            │ │
-│  │  NL Query    │   │   Forecasting Engine      │ │
-│  │  Engine      │   │   (Prophet)               │ │
+│  │  Module 1    │   │       Module 2           │ │
+│  │  NL Query    │   │   Forecasting Engine     │ │
+│  │  Engine      │   │   (Prophet)              │ │
 │  └──────────────┘   └──────────────────────────┘ │
 │  ┌──────────────┐   ┌──────────────────────────┐ │
-│  │  Module 3    │   │       Module 4            │ │
-│  │  Anomaly     │   │   Insight Generator       │ │
-│  │  Detector    │   │   (LLM Reports)           │ │
+│  │  Module 3    │   │       Module 4           │ │
+│  │  Anomaly     │   │   Insight Generator      │ │
+│  │  Detector    │   │   (LLM Reports)          │ │
 │  └──────────────┘   └──────────────────────────┘ │
 └──────────────────────┬──────────────────────────┘
                        │
