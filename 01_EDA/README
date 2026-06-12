@@ -1,1 +1,100 @@
+# 01 — Exploratory Data Analysis (EDA)
 
+## Overview
+
+This folder contains the complete 20-step dataset discovery and 
+data profiling notebook for the Retail AI Intelligence Platform project.
+It was the first phase of the project — understanding the data deeply 
+before building anything.
+
+## File
+
+| File        | Description                                 |
+|-------------|---------------------------------------------|
+| `EDA.ipynb` | Complete EDA notebook — run in Google Colab |
+
+## How to Run
+
+1. Open [Google Colab](https://colab.research.google.com)
+2. Upload `EDA.ipynb`
+3. Upload all 6 CSV files to the Colab session:
+   - `Customers.csv`
+   - `Products.csv`
+   - `Sales.csv`
+   - `Stores.csv`
+   - `Exchange_Rates.csv`
+   - `Data_Dictionary.csv`
+4. Run all cells in order (`Runtime → Run all`)
+
+## What the Notebook Does
+
+The notebook covers 20 steps across 3 main areas:
+
+### Dataset Discovery
+- Step 1 — Load all 6 CSV files with automatic encoding detection
+- Step 2 — Column-level analysis (nulls, uniques, dtypes, suspicious values)
+- Step 3 — Business interpretation of every table
+- Step 4 — Primary key detection
+- Step 5 — Foreign key and relationship detection
+- Step 6 — ER diagram generation (text + Mermaid)
+- Step 7 — Full data quality audit (HIGH / MEDIUM / LOW severity)
+
+### Business Analysis
+- Step 8 — Time analysis and seasonality detection
+- Step 9 — Sales deep analysis with YoY growth
+- Step 10 — Customer demographics and segmentation
+- Step 11 — Product analysis and price distribution
+- Step 12 — Store performance analysis
+- Step 13 — Exchange rate trends and FX strategy
+
+### Architecture Planning
+- Step 14 — Feature engineering ideas
+- Step 15 — dbt modelling architecture plan
+- Step 16 — Power BI dashboard blueprint
+- Step 17 — KPI catalogue
+- Step 18 — DAX measure suggestions
+- Step 19 — Final professional summary report
+- Step 20 — Bonus: correlation analysis, outlier detection, RFM framework
+
+## Key Findings
+
+| Metric                     | Value                                                         |
+|----------------------------|---------------------------------------------------------------|
+| Total Transactions         | 62,884                                                        |
+| Countries                  | 8                                                             |
+| Currencies                 | 5 (USD, CAD, AUD, EUR, GBP)                                   |
+| Date Range                 | 2016 – 2021                                                   |
+| Total Revenue (list price) | $55.7M                                                        |
+| Avg Gross Margin           | 54.9%                                                         |
+| FK Integrity               | Zero orphan records across all 3 relationships                |
+| Data Quality Issues        | 1 HIGH (Delivery Date 79.1% null — by design, online channel) |
+| Inactive Customers         | 3,379 (22.1% of total base)                                   |
+| Pareto Finding             | Top 20% of SKUs drive 70% of revenue                          |
+
+## Dependencies
+
+```python
+pandas
+numpy
+matplotlib
+seaborn
+```
+
+All pre-installed in Google Colab — no additional setup needed.
+
+## Output
+
+Running this notebook produces:
+
+- Dataset overview table with memory and encoding info
+- Column profiles for all 6 tables
+- FK relationship audit with match percentages
+- Data quality severity rankings
+- Sales trend charts (monthly, annual, category)
+- Customer demographic charts
+- Product margin and distribution charts
+- Store performance charts
+- Exchange rate trend charts
+- Seasonality heatmap
+- Revenue outlier boxplot
+- Complete architecture planning for dbt and Power BI
