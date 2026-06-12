@@ -1,0 +1,39 @@
+# ============================================================
+# profiles.yml
+# Place this file at: ~/.dbt/profiles.yml
+# DO NOT commit to version control — contains credentials
+# ============================================================
+
+retail_bi:
+  target: dev
+  outputs:
+
+    dev:
+      type: snowflake
+      account:    "YOUR_ACCOUNT_IDENTIFIER"   # e.g. xy12345.us-east-1
+      user:       "YOUR_SNOWFLAKE_USER"
+      password:   "YOUR_SNOWFLAKE_PASSWORD"
+      # Alternatively use key-pair or SSO:
+      # authenticator: externalbrowser
+
+      role:       "TRANSFORMER"               # recommended: dedicated role
+      warehouse:  "COMPUTE_WH"
+      database:   "RETAIL_RAW"
+      schema:     "RAW"
+
+      threads:    4
+      client_session_keep_alive: false
+      query_tag:  "dbt_retail_bi"
+
+    prod:
+      type: snowflake
+      account:    "YOUR_ACCOUNT_IDENTIFIER"
+      user:       "YOUR_SNOWFLAKE_USER"
+      password:   "YOUR_SNOWFLAKE_PASSWORD"
+      role:       "TRANSFORMER"
+      warehouse:  "COMPUTE_WH"
+      database:   "RETAIL_PROD"
+      schema:     "RAW"
+      threads:    8
+      client_session_keep_alive: false
+      query_tag:  "dbt_retail_bi_prod"

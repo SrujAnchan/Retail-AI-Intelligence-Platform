@@ -1,0 +1,100 @@
+version: 2
+
+models:
+
+  - name: stg_sales
+    description: "Cleaned sales transactions — one row per order line item"
+    columns:
+      - name: sale_key
+        tests: [not_null, unique]
+      - name: order_number
+        tests: [not_null]
+      - name: line_item
+        tests: [not_null]
+      - name: order_date
+        tests: [not_null]
+      - name: customer_key
+        tests: [not_null]
+      - name: store_key
+        tests: [not_null]
+      - name: product_key
+        tests: [not_null]
+      - name: quantity
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+      - name: currency_code
+        tests:
+          - accepted_values:
+              values: ["USD","CAD","AUD","EUR","GBP"]
+      - name: channel
+        tests:
+          - accepted_values:
+              values: ["Online","In-Store"]
+
+  - name: stg_customers
+    description: "Cleaned customer dimension with derived age fields"
+    columns:
+      - name: customer_key
+        tests: [not_null, unique]
+      - name: gender
+        tests:
+          - accepted_values:
+              values: ["Male","Female"]
+      - name: country
+        tests: [not_null]
+      - name: birthday
+        tests: [not_null]
+      - name: customer_age_years
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN 0 AND 120"
+
+  - name: stg_products
+    description: "Cleaned product dimension with list margin"
+    columns:
+      - name: product_key
+        tests: [not_null, unique]
+      - name: product_name
+        tests: [not_null, unique]
+      - name: unit_cost_usd
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: unit_price_usd
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: list_margin_pct
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN 0 AND 100"
+
+  - name: stg_stores
+    description: "Cleaned store dimension including online channel (StoreKey=0)"
+    columns:
+      - name: store_key
+        tests: [not_null, unique]
+      - name: store_type
+        tests:
+          - accepted_values:
+              values: ["Online","Physical"]
+
+  - name: stg_exchange_rates
+    description: "Deduplicated daily FX rates — composite PK (rate_date, currency_code)"
+    columns:
+      - name: rate_date
+        tests: [not_null]
+      - name: currency_code
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["USD","CAD","AUD","EUR","GBP"]
+      - name: exchange_rate_vs_usd
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"

@@ -1,0 +1,34 @@
+name: "retail_bi"
+version: "1.0.0"
+config-version: 2
+
+profile: "retail_bi"
+
+model-paths:      ["models"]
+seed-paths:       ["seeds"]
+test-paths:       ["tests"]
+snapshot-paths:   ["snapshots"]
+analysis-paths:   ["analyses"]
+macro-paths:      ["macros"]
+docs-paths:       ["docs"]
+
+target-path:      "target"
+clean-targets:    ["target", "dbt_packages"]
+
+models:
+  retail_bi:
+    staging:
+      +schema:       "staging"
+      +materialized: "view"
+    intermediate:
+      +schema:       "intermediate"
+      +materialized: "view"
+    marts:
+      +schema:       "marts"
+      +materialized: "table"
+
+vars:
+  base_currency: "USD"
+  # Adjust these to match your Snowflake raw schema
+  raw_database: "RETAIL_RAW"
+  raw_schema:   "RAW"

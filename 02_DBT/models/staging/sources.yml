@@ -1,0 +1,117 @@
+# =============================================================
+# models/staging/sources.yml
+# Defines all raw source tables loaded into Snowflake RAW schema
+# =============================================================
+
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ var('raw_database') }}"
+    schema:   "{{ var('raw_schema') }}"
+    description: "Raw CSV data loaded into Snowflake via Snowpipe or manual COPY INTO"
+
+    tables:
+
+      - name: customers
+        description: "Master customer dimension — demographics and geography"
+        columns:
+          - name: CustomerKey
+            description: "Unique customer identifier"
+            tests: [not_null, unique]
+          - name: Gender
+            description: "Customer gender"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ["Male", "Female"]
+          - name: Name
+            tests: [not_null]
+          - name: City
+            tests: [not_null]
+          - name: Country
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ["Australia","Canada","France","Germany",
+                           "Italy","Netherlands","United Kingdom","United States"]
+          - name: Continent
+            tests:
+              - accepted_values:
+                  values: ["Australia","Europe","North America"]
+          - name: Birthday
+            tests: [not_null]
+
+      - name: products
+        description: "Product master — pricing, cost, category hierarchy"
+        columns:
+          - name: ProductKey
+            tests: [not_null, unique]
+          - name: "Product Name"
+            tests: [not_null, unique]
+          - name: "Unit Cost USD"
+            tests: [not_null]
+          - name: "Unit Price USD"
+            tests: [not_null]
+          - name: Category
+            tests: [not_null]
+          - name: Subcategory
+            tests: [not_null]
+
+      - name: stores
+        description: "Store master — physical locations and online channel"
+        columns:
+          - name: StoreKey
+            tests: [not_null, unique]
+          - name: Country
+            tests: [not_null]
+          - name: State
+            tests: [not_null]
+
+      - name: exchange_rates
+        description: "Daily FX rates vs USD for 5 currencies"
+        columns:
+          - name: Date
+            tests: [not_null]
+          - name: Currency
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ["USD","CAD","AUD","EUR","GBP"]
+          - name: Exchange
+            tests: [not_null]
+
+      - name: sales
+        description: "Transactional fact — every order line item 2016-2021"
+        columns:
+          - name: "Order Number"
+            tests: [not_null]
+          - name: "Line Item"
+            tests: [not_null]
+          - name: "Order Date"
+            tests: [not_null]
+          - name: CustomerKey
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'customers')
+                  field: CustomerKey
+          - name: StoreKey
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'stores')
+                  field: StoreKey
+          - name: ProductKey
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'products')
+                  field: ProductKey
+          - name: Quantity
+            tests: [not_null]
+          - name: "Currency Code"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ["USD","CAD","AUD","EUR","GBP"]

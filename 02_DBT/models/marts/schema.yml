@@ -1,0 +1,90 @@
+version: 2
+
+models:
+
+  - name: mart_sales_fact
+    description: >
+      Final enriched fact table. One row per order line item.
+      USD-normalized revenue and profit, fully joined to customer and store context.
+      Primary table for all Power BI visuals.
+    columns:
+      - name: sale_key
+        tests: [not_null, unique]
+      - name: order_number
+        tests: [not_null]
+      - name: order_date
+        tests: [not_null]
+      - name: revenue_usd
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: profit_usd
+        tests: [not_null]
+      - name: margin_pct
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN 0 AND 100"
+      - name: quantity
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+      - name: channel
+        tests:
+          - accepted_values:
+              values: ["Online","In-Store"]
+
+  - name: mart_dim_customer
+    description: >
+      Customer dimension enriched with lifetime value, RFM scores and segment labels.
+      Includes inactive customers (has_orders = FALSE).
+    columns:
+      - name: customer_key
+        tests: [not_null, unique]
+      - name: rfm_segment
+        tests:
+          - accepted_values:
+              values: ["Champions","Loyal","Potential Loyalist","New Customer",
+                       "At Risk","Cannot Lose Them","Lost","Hibernating","Needs Attention"]
+
+  - name: mart_dim_product
+    description: >
+      Product dimension enriched with total revenue, units sold, and ABC classification.
+      A-class = top 70% of revenue SKUs.
+    columns:
+      - name: product_key
+        tests: [not_null, unique]
+      - name: abc_class
+        tests:
+          - accepted_values:
+              values: ["A — Top (70%)","B — Mid (20%)","C — Tail (10%)"]
+
+  - name: mart_dim_store
+    description: >
+      Store dimension enriched with annualized revenue, revenue per sqm and performance rank.
+      StoreKey=0 = Online channel.
+    columns:
+      - name: store_key
+        tests: [not_null, unique]
+
+  - name: mart_dim_date
+    description: >
+      Full date spine from 2015-01-01 to 2022-12-31.
+      Required for Power BI time intelligence (SAMEPERIODLASTYEAR, DATEADD etc.).
+    columns:
+      - name: date_key
+        tests: [not_null, unique]
+      - name: full_date
+        tests: [not_null, unique]
+
+  - name: mart_executive_summary
+    description: >
+      Pre-aggregated monthly KPIs by country, category and channel.
+      Includes YoY and MoM growth. Used for fast Executive Dashboard loads.
+    columns:
+      - name: month_start
+        tests: [not_null]
+      - name: revenue_usd
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
